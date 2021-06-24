@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  node:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment: 
+      MYSQL_HOST: mariadb
+    networks:
+      - docker-service
+    depends_on: 
+      - mariadb
+
+  mariadb:
+    image: mariadb
+    expose:
+      - 3306
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    networks:
+      - docker-service
+    volumes:
+      - maria-data:/data/db
+      - ./epytodo.sql:/docker-entrypoint-initdb.d/epytodo.sql
+
+networks:
+  docker-service:
+
+volumes:
+  maria-data:
